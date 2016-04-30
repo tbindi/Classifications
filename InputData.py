@@ -9,7 +9,11 @@ target_names = {"back": 2, "buffer_overflow": 3, "ftp_write": 4,
                 "normal": 0, "perl": 3, "phf": 4, "pod": 2, "portsweep": 1,
                 "rootkit": 3, "satan": 1,
                 "smurf": 2, "spy": 4, "teardrop": 2, "warezclient": 4,
-                "warezmaster": 4}
+                "warezmaster": 4, "apache2": 2,"httptunnel": 4,"mailbomb": 2,
+                "mscan": 1,"named": 4,"processtable": 2,"ps": 3,"rootkit": 3,
+                "saint": 1, "sendmail": 4, "snmpgetattack": 4, "snmpguess":
+                    4, "sqlattack": 3, "udpstorm": 2, "worm": 4, "xlock": 4,
+                "xsnoop": 4, "xterm": 3}
 
 
 def get_test(filename):
@@ -31,6 +35,21 @@ def int_or_float(a):
         return int(a)
     except ValueError:
         return float(a)
+
+
+def get_plain_text(filename):
+    with open(filename, "rb") as f:
+        data = list()
+        target = list()
+        reader = csv.reader(f, delimiter=",")
+        for i, line in enumerate(reader):
+            data.append(np.asarray(line[:-1], dtype=np.float))
+            # target.append(np.asarray(target_names[line[-1]], dtype=np.int))
+            temp = np.array([0, 0, 0, 0, 0])
+            temp[target_names[line[-1]]] = 1
+            target.append(np.asarray(temp))
+            # target.append(target_names[line[-1]])
+    return data, target
 
 
 def get_plain(filename):
@@ -85,8 +104,8 @@ def get_data(filename):
 
 
 if __name__ == "__main__":
-    data = get_data('../test.data')
-    f = open('../test.data.out', 'wb')
+    data = get_data('../corrected')
+    f = open('../corrected.out.2', 'wb')
     for i in data:
         f.write(','.join(str(j) for j in i))
         f.write('\n')

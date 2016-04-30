@@ -1,5 +1,5 @@
 from numpy import zeros, dot, mean, array, asarray
-import numpy as np
+from sklearn.metrics import log_loss
 from Helper import softmax, entropy_mlr
 from InputData import get_plain, target_names
 
@@ -13,8 +13,9 @@ class MultiLogistic:
         self.b = zeros(n)
 
     def neg_log_like(self):
-        sig_act = softmax(dot(self.x, self.W) + self.b)
-        return entropy_mlr(self.y, sig_act)
+        return log_loss(self.y, dot(self.x, self.W))
+        # sig_act = softmax(dot(self.x, self.W) + self.b)
+        # return entropy_mlr(self.y, sig_act)
 
     def learn(self, lr=0.1, inp=None, l2=0.0):
         if inp is not None:
@@ -26,9 +27,9 @@ class MultiLogistic:
         self.W += lr * dot(self.x.T, d_y) - lr * l2 * self.W
         self.b += lr * mean(d_y, axis=0)
 
-    def predict(self, x):
+    def predict(self, a):
         # Softmax for Multinomial Logistic Regression
-        return softmax(dot(x, self.W) + self.b)
+        return softmax(dot(a, self.W) + self.b)
 
 
 if __name__ == "__main__":

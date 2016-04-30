@@ -7,7 +7,7 @@ def sigmoid(i):
 
 # Made Static Functions
 def softmax(i):
-    sf = exp(i)
+    sf = exp(i - max(i))
     if sf.ndim == 1:
         return sf / sum(sf, axis=0)
     else:
@@ -15,4 +15,4 @@ def softmax(i):
 
 
 def entropy_mlr(y, sig):
-    return mean(sum(y * log(sig) + (1 - y) * log(1 - sig), axis=1))
+    return -mean(sum(y * log(sig) + (1 - y) * log(1 - sig), axis=1))
